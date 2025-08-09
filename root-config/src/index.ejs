@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Angular Microfrontends</title>
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  <meta name="importmap-type" use-injector />
+
+  <!-- Add your organization's prod import map URL to this script's src  -->
+  <script type="injector-importmap" src="https://angular.microfrontends.app/importmap.json"></script>
+
+  <% if (isLocal) { %>
+    <script type="injector-importmap">
+    {
+      "imports": {
+        "@angular-microfrontends/root-config": "//localhost:9000/angular-microfrontends-root-config.js",
+        "@angular-microfrontends/navbar": "//localhost:4201/main.js",
+        "@angular-microfrontends/metronic": "https://ekgis-metronic-tailwind-angular.netlify.app/main.js"
+      }
+    }
+  </script>
+  <% } %>
+
+  <script src="https://storage.googleapis.com/angular.microfrontends.app/deps/npm%3Aimport-map-overrides%405.1.1/dist/import-map-overrides.js"></script>
+  <script src="https://storage.googleapis.com/angular.microfrontends.app/deps/npm%3A%40single-spa/import-map-injector%402.0.1/lib/import-map-injector.js"></script>
+    <!-- ✅ Metronic CSS & JS global -->
+    <link rel="stylesheet" href="https://ekgis-metronic-tailwind-angular.netlify.app/styles.css" />
+    <script src="https://ekgis-metronic-tailwind-angular.netlify.app/scripts.js"></script>
+  <style>
+    body {
+      margin: 0;
+    }
+    .welcome {
+      padding: 1em;
+    }
+  </style>
+
+  <template id="single-spa-layout">
+    <single-spa-router>
+      <nav>
+        <application name="@angular-microfrontends/navbar" props="favoriteDog"></application>
+      </nav>
+      <main>
+        <route default>
+          <div class="welcome">
+            Welcome to Angular Microfrontends demo.
+          </div>
+        </route>
+        <route path="/rate-doggos">
+          <application name="@angular-microfrontends/rate-doggos" props="favoriteDog"></application>
+        </route>
+        <route path="/view-dogs">
+          <application name="@angular-microfrontends/view-dogs"></application>
+        </route>
+        <route path="/metronic">
+          <application name="@angular-microfrontends/metronic"></application>
+        </route>
+      </main>
+    </single-spa-router>
+  </template>
+</head>
+<body>
+  <script>
+    window.importMapInjector.initPromise.then(() => {
+      import('@angular-microfrontends/root-config');
+    });
+  </script>
+  <import-map-overrides-full show-when-local-storage="devtools"></import-map-overrides-full>
+</body>
+</html>
